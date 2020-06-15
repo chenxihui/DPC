@@ -4,14 +4,14 @@ This project is developed to synthesize attributed social graphs that preserve
 the community structures of the input graph under differential privacy guarantee. 
 For the design details of the algorithms, please refer to the paper attached. 
 
-===============================
+******************************
 Environment
-===============================
+******************************
 The project is implemented in JavaSE-1.8 with jgrapht-core-1.3.0. 
 
-===============================
+******************************
 DATASETS
-===============================
+******************************
 Our algorithms are tested over four public datasets collected from epinions, 
 facebook, petsters available on SNAP (snap.stanford.edu). For the data from 
 epinions, we extract an additional dataset of 8000 nodes. All the datasets 
@@ -20,10 +20,9 @@ are named as follows:
    * epinions8000_combined.txt
    * facebook_combined.txt
    * petster_combined.txt
-
-===============================
+******************************
 INPUT AND OUTPUT
-===============================
+******************************
 The codes are used to iteratively generate synthetic attributed social graphs
 based on the input dataset with 3 different methods, i.e., CAGM, DCSBM,
 TriCycle. The codes guarantees differential privacy with four privacy budgets, 
@@ -79,9 +78,9 @@ A differentially privately synthesised graph is stored with two files:
         <dataset>_[method]_attribute_<epsilon>_<serialno>.txt
 
 
-===============================
+******************************
 RUN THE CODES
-===============================
+******************************
 Please use the Jar package to run codes as the following:
 
 java -jar dpc.jar <dataset> <starting iteration serial number> <ending iteration
