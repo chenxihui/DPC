@@ -29,9 +29,11 @@ The codes are used to iteratively generate synthetic attributed social graphs
 based on the input dataset with 3 different methods, i.e., CAGM, DCSBM,
 TriCycle. The codes guarantees differential privacy with four privacy budgets, 
 i.e., 2.0, 3.0, 4.0, 5.0.   
+
 ++++++++++++++++++++++++++++++
 Input parameters
 ++++++++++++++++++++++++++++++
+
 parameters are required to execute the code:
     1. dataset name (string) which is selected from the following list:
         - epinions
