@@ -40,18 +40,17 @@ public class ExperimentMain {
 		//expMain.averageThetaFCompare("ipython/facebook_combined_experiment", "facebook", "");
 		//expMain.averageThetaFCompare("epinions_DCSBM_combined_experiment", "epinions", "DCSBM");
 
-		/*
 		String dataname = args[0];
 		int start_no= Integer.parseInt(args[1]);
 		int end_no = Integer.parseInt(args[2]);
 		int method = Integer.parseInt(args[3]);
-		*/
 		
-		String dataname = "facebook";
+/*		
+		String dataname = "epinions";
 		int start_no= 0;
 		int end_no = 0;
 		int method = 1;
-		
+*/		
 		switch(method) {
 		case 1: 
 			expMain.generateDPCAGMGraphInBatch(dataname, start_no, end_no);
@@ -92,8 +91,8 @@ public class ExperimentMain {
 					if (!f.exists()) {
 						Partition rp;
 						do {
-							//rp = this.run_moddivisive(pFile, dataname, part_epsilon);
-							rp = this.run_moddivisive_abt(pFile, dataname, part_epsilon);
+							rp = this.run_moddivisive(pFile, dataname, part_epsilon);
+							//rp = this.run_moddivisive_abt(pFile, dataname, part_epsilon);
 						}while (rp.partition.size()<=1); 
 					}
 				}else
@@ -227,6 +226,7 @@ public class ExperimentMain {
 					Partition rp;
 					do {
 						rp = this.run_moddivisive(pFile, dataname, part_epsilon);
+						//rp = this.run_moddivisive_abt(pFile, dataname, part_epsilon);
 					}while (rp.partition.size()==1); 
 				}
 

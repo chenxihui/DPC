@@ -87,142 +87,14 @@ public class ModDivisiv {
 
 
 	public double getDPmass(double epsilon, double global_sensitivity, double score) {
-		return Math.exp(epsilon * score / (2 * global_sensitivity));
+		return Math.exp(epsilon * score / (0.2 * global_sensitivity));
 	}
 
-	public double getJumpProb(double epsilon, double score_incr) {
-		return Math.min(1.0, Math.exp(epsilon * (score_incr)/(2*0.00001)));
+	public double getJumpProb(double epsilon, double global_sensitivity,  double score_incr) {
+		return Math.min(1.0, Math.exp(epsilon * score_incr/(2*global_sensitivity)));
 	}
 
 
-//second implementation with a pre-calcualted number of iteratition before convergence determined by K*rS	
-	public Partition ModMCMC_v2(Partition p, graph g, int windowsize, double levelepsilon, long rS) {
-		
-		if(p.partition.size()<this.k)
-			return p;
-		/* hist stores the histogram of samples generated */
-		HashMap<String, Integer> hist = new HashMap<String, Integer>();
-
-
-		/* lastMeanModularity stores the mean modularity in the last window
-		 * and meanDifference stores the difference of mean modularities between current and the last window
-		 */
-		double next_modularity = 0;
-		
-
-		//int nEdges = g.getNumberOfEdges(p.getVertexList());
-		int nEdges = g.getGraph().edgeSet().size();
-		double curr_modularity = g.getModularity(p);
-
-
-		long count = 0 ;
-		
-	    HashMap<Integer, Integer> ComDegree = new HashMap<Integer, Integer>();
-	    for (int i = 0; i < p.partition.size(); i++) {
-	    	ArrayList<String> com = p.partition.get(i);
-	    	ComDegree.put(i, g.getSumOfDegrees(com));
-	    }
-	    
-	    HashMap<Integer, String> pDigestHashList = new HashMap<Integer, String>();
-
-	    Partition p_new; 
-	    p_new =  p.clone();
-		p_new.sort();
-		String pDigest = p_new.toString();
-		pDigestHashList.put(p_new.hashCode(), pDigest);
-	    
-		while (count < this.K * rS) {
-			
-				/*
-				 * get the vertex to move and the destination block
-				 */
-			Random rng = new Random();
-
-			int from_block = rng.nextInt(p.partition.size());
-			while (p.partition.get(from_block).size() == 0)
-			    from_block = rng.nextInt(p.partition.size());
-			
-			if (!p.partition.get(from_block).isEmpty()) {
-				int index_in_block = rng.nextInt(p.partition.get(from_block).size());
-				ArrayList<String> com_from =(ArrayList<String>) p.partition.get(from_block); 
-
-				String vertex_to_remove = p.partition.get(from_block).get(index_in_block);
-			    int[] degInCom = g.getNumberDegreeInComs(vertex_to_remove, p);
-				
-				double remove_cost = - (degInCom[from_block])
-						+ (ComDegree.get(from_block) - g.getGraph().degreeOf(vertex_to_remove))*
-						g.getGraph().degreeOf(vertex_to_remove)/(2 * nEdges);
-
-
-				int move_to_block = rng.nextInt(p.partition.size());
-				while (move_to_block == from_block)
-					move_to_block = rng.nextInt(p.partition.size());
-
-				ArrayList<String> com_to =(ArrayList<String>) p.partition.get(move_to_block); 
-
-				double incr = remove_cost + (degInCom[move_to_block]) - 
-						ComDegree.get(move_to_block)*g.getGraph().degreeOf(vertex_to_remove)/(2 * nEdges);
-				
-				next_modularity = curr_modularity + incr/nEdges; 
-				
-				double move_probability = this.getJumpProb(levelepsilon, incr/nEdges );
-				boolean jump = false;
-				if (Math.random() < move_probability) {
-				    com_from.remove(vertex_to_remove);	
-				    com_to.add(vertex_to_remove);
-					curr_modularity = next_modularity;
-					p.node2com.put(vertex_to_remove, move_to_block);
-					ComDegree.put(from_block, ComDegree.get(from_block)-g.getGraph().degreeOf(vertex_to_remove));
-					ComDegree.put(move_to_block, ComDegree.get(move_to_block)+g.getGraph().degreeOf(vertex_to_remove));
-					jump = true;
-				}
-
-				
-				/* Sort partition so that the hash value of the partition is unique */
-				if(jump==true) {
-					p_new =  p.clone();
-					p_new.sort();
-				    int hash = p_new.hashCode();	
-				    if(pDigestHashList.containsKey(hash))
-				    	pDigest = pDigestHashList.get(hash);
-				    else {
-				    	//pDigest = p_new.toString();
-				        pDigest = this.updatePDigest(pDigest, vertex_to_remove, com_to.get(0));
-				    	pDigestHashList.put(hash, pDigest);
-				    }
-
-				}
-
-				if (hist.containsKey(pDigest)) {
-					int new_value = hist.get(pDigest) + 1;
-					hist.replace(pDigest, new_value);
-				} else {
-					hist.put(pDigest, 1);
-				}
-
-				 System.out.println("count="+count+ " frequency =  "+ hist.get(pDigest)+", current_modularity=" +
-						 curr_modularity + " ,"+move_probability + " vertex_to_remove=" + vertex_to_remove); 
-				 //+ "\n 		 Current partition is " + current_p.toString());
-			}
-			count ++;
-			
-		}
-		
-		/* sample a new partition from the distribution calculated from hist */
-		Random rng = new Random();
-		double prob = rng.nextDouble();
-		double sum_prob = 0;
-		Iterator<String> iter = getProbDistribution(hist).keySet().iterator();
-
-		String sampled_partition = "";
-		while (iter.hasNext() && sum_prob < prob) {
-			sampled_partition = iter.next();
-			sum_prob += (hist.get(sampled_partition));
-		}
-		// convert sample_partition which is a string to a partition
-		return new Partition(sampled_partition);
-
-	}
 
 /**
  * ModMCMC with attributes
@@ -320,7 +192,7 @@ public class ModDivisiv {
 				
 				double next_mod = curr_modularity + incr/nEdges;
 				
-				double move_probability = this.getJumpProb(levelepsilon,  increased_mod);
+				double move_probability = this.getJumpProb(levelepsilon, this.global_sensitivity,  increased_mod);
 
 				if (Math.random() < move_probability) {
 				    com_from.remove(vertex_to_remove);	
@@ -786,7 +658,7 @@ public class ModDivisiv {
 				
 				next_modularity = curr_modularity + incr/nEdges; 
 				
-				double move_probability = this.getJumpProb(levelepsilon, incr/nEdges);
+				double move_probability = this.getJumpProb(levelepsilon, this.global_sensitivity, incr/nEdges);
 				if (Math.random() < move_probability) {
 				    com_from.remove(vertex_to_remove);	
 				    com_to.add(vertex_to_remove);
