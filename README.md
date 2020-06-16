@@ -1,35 +1,37 @@
-# DPC
-synthesising attributed social graphs preserving community structures under differential privacy
 This project is developed to synthesize attributed social graphs that preserve 
 the community structures of the input graph under differential privacy guarantee. 
 For the design details of the algorithms, please refer to the paper attached. 
 
-******************************
+*******************************
 Environment
-******************************
-The project is implemented in JavaSE-1.8 with jgrapht-core-1.3.0. 
+*******************************
+The project is implemented in JavaSE-1.8 with jgrapht-core-1.3.0. The codes are
+tested on a windows machine with 8G memory. The execution does
+not show any visible efficiency degradation.
 
-******************************
+*******************************
 DATASETS
-******************************
+*******************************
 Our algorithms are tested over four public datasets collected from epinions, 
 facebook, petsters available on SNAP (snap.stanford.edu). For the data from 
-epinions, we extract an additional dataset of 8000 nodes. All the datasets 
-are named as follows:
-   * epinions_combined.txt
-   * epinions8000_combined.txt
-   * facebook_combined.txt
-   * petster_combined.txt
-******************************
+epinions, we extract an additional dataset of 8000 nodes. Each dataset is stored
+in two files: one for graph structures and the other for node attribute values.  
+The corresponding file names are as follows:
+   * epinions_combined.txt attribute_epinions_combined.txt
+   * epinions8000_combined.txt attribute_epinions8000_combined.txt
+   * facebook_combined.txt  attribtue_facebook_combined.txt  
+   * petster_combined.txt attribute_petster_combined.txt
+
+*******************************
 INPUT AND OUTPUT
-******************************
+*******************************
 The codes are used to iteratively generate synthetic attributed social graphs
 based on the input dataset with 3 different methods, i.e., CAGM, DCSBM,
 TriCycle. The codes guarantees differential privacy with four privacy budgets, 
 i.e., 2.0, 3.0, 4.0, 5.0.   
-————————————————————————————
+++++++++++++++++++++++++++++++
 Input parameters
-————————————————————————————
+++++++++++++++++++++++++++++++
 parameters are required to execute the code:
     1. dataset name (string) which is selected from the following list:
         - epinions
@@ -43,9 +45,9 @@ parameters are required to execute the code:
         - 2 if DCSBM will be used
         - 3 if TriCycle will be used
 
-------------------------------
+++++++++++++++++++++++++++++++
 Output files
-------------------------------
+++++++++++++++++++++++++++++++
 
 The output of the program includes the numbered synthesised graphs and other
 intermediate parameter files generated during the execution. All the output
@@ -78,10 +80,11 @@ A differentially privately synthesised graph is stored with two files:
         <dataset>_[method]_attribute_<epsilon>_<serialno>.txt
 
 
-******************************
+*******************************
 RUN THE CODES
-******************************
-Please use the Jar package to run codes as the following:
+*******************************
+Please use the Jar package to run codes with the dataset files in the same
+directory. The command should be in the following form: 
 
 java -jar dpc.jar <dataset> <starting iteration serial number> <ending iteration
 serial number> <method>
@@ -91,3 +94,16 @@ CAGM, the following command is used:
 
  java -jar dpc.jar facebook 0 9 1
  
+*******************************
+Evaluating measures
+*******************************
+All measures that evaluate the quality of synthetic graphs are implemented
+in python 2.7 and stored in the file DPC_data_processing.py.
+The evaluation relies on two external packages: Louvain (uploaded as
+community-louvain.py) and cesna (version 4.1, Jul 25, 2018).
+The Louvain package calculates the community based on only graph structures,
+i.e., nodes and edges, without attributes while the cesna method takes into 
+account node attributes in community detection.  
+
+
+
