@@ -85,15 +85,21 @@ Please use the Jar package to run codes with the dataset files in the same
 directory. The command should be in the following form: 
 
 ```
-java -jar dpc.jar <dataset> <starting iteration serial number> <ending iteration serial number> <method id>
+   java -jar dpc.jar <dataset> <starting iteration serial number> <ending iteration serial number> <method id>
 ```
 
 For example, if we want to run 10 synthetic graphs for the facebook dataset with
 CAGM, the following command is used:
 ```
- java -jar dpc.jar facebook 0 9 1
+   java -jar dpc.jar facebook 0 9 1
 ``` 
 
+We can also run without any parameters like the following:
+
+   ```java -jar dpc.jar```
+
+In this case, the default setting will be used, which is 10 synthetic graphs for the facebook dataset with
+CAGM, the same as the one in the example.
 ## EVALUATING MEASURES
 
 All measures that evaluate the quality of synthetic graphs are implemented
