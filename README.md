@@ -100,12 +100,23 @@ CAGM, the following command is used:
 Evaluating measures
 *******************************
 All measures that evaluate the quality of synthetic graphs are implemented
-in python 2.7 and stored in the file DPC_data_processing.py.
-The evaluation relies on two external packages: Louvain (uploaded as
-community-louvain.py) and cesna (version 4.1, Jul 25, 2018).
+in python 3.0 and stored in the file DPC_data_processing.py.
+The following python packages are needed to run the codes:
+  - snap
+  - networkx
+  - matplotlib
+  - numpy 
+  - pandas
+  - scipy
+  
+The evaluation relies on two external packages: Louvain (imported as the module 'community'
+impleemented and uploaded in community-louvain.py) and cesna (version 4.1, Jul 25, 2018).
 The Louvain package calculates the community based on only graph structures,
 i.e., nodes and edges, without attributes while the cesna method takes into 
-account node attributes in community detection.  
+account node attributes in community detection.
+The cesna source codes can be downloaded from the following link and is excluede 
+from the current project: https://github.com/snap-stanford/snap. Please note that 
+cesna should be run seperately to obtain the communities used as the baselines.
 
 
 
