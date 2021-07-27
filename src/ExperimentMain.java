@@ -40,10 +40,26 @@ public class ExperimentMain {
 		//expMain.averageThetaFCompare("ipython/facebook_combined_experiment", "facebook", "");
 		//expMain.averageThetaFCompare("epinions_DCSBM_combined_experiment", "epinions", "DCSBM");
 
-		String dataname = args[0];
-		int start_no= Integer.parseInt(args[1]);
-		int end_no = Integer.parseInt(args[2]);
-		int method = Integer.parseInt(args[3]);
+
+		int start_no = 0;
+		int end_no = 0 ;
+		int method=1 ;
+		String dataname = null;
+
+		if (args.length==4){
+			dataname = args[0];
+			start_no= Integer.parseInt(args[1]);
+			end_no = Integer.parseInt(args[2]);
+			method = Integer.parseInt(args[3]);
+		}else if (args.length ==0) {
+			dataname = "facebook";
+			start_no= 0;
+			end_no = 9;
+			method = 1;
+		}else {
+			System.out.println("not enough parameters entered!");
+			System.exit(1);
+		}
 		
 /*		
 		String dataname = "epinions";
